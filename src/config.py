@@ -1,6 +1,8 @@
-class DevelopmentConfig():
-    DEBUG = True
+class Config:
+    SECRET_KEY = 'secret_key'
 
+class DevelopmentConfig(Config):
+    DEBUG = True
 
 
 config = {
