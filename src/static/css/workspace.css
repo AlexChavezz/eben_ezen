@@ -1,0 +1,61 @@
+.users-page-container {
+    width: 100vw;
+    height: 100vh;
+    background-color: #f5f9f9;
+    overflow: hidden;
+    
+}
+
+.workspace-header {
+    height: 75px;
+    width: 100%;
+    border-bottom: 1px solid #e5e5e5;
+    display:flex;
+    align-items: center;
+}
+
+.workspace-title {
+    color: #404040;
+    font-size: 1.6rem;
+    text-align: left;
+    margin-left: 30px;
+}
+
+.workspace-greeting-container {
+    display: flex;
+    margin-top: 50px;
+    margin-left: 50px;
+    width: 100%;
+}
+
+.workspace-table-container {
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.workspace-table {
+    width: 90%;
+    /* height: 100%; */
+    border-collapse: collapse;
+    border-spacing: 0;
+    border: 1px solid #ddd;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    border-radius: 10px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.workspace-table-thead {
+    background-color: #404040;
+    color: #ffffff;
+    text-align: center;
+    font-weight: bold;
+}
+td, th {
+    padding: 10px;
+}

@@ -31,3 +31,14 @@ class ModelUser():
                 return User(res[0], res[1], res[2], res[3], res[4])
         except Exception as err:
             raise Exception(err)
+    @classmethod
+    def get_all(self, db):
+        try:
+            cursor = db.cursor()
+            sql = f"SELECT user_id, name, id_role, password, role FROM users JOIN roles ON users.id_role=roles.rol_id;"
+            cursor.execute(sql)
+            res = cursor.fetchall()
+            cursor.close()
+            return res
+        except Exception as err:
+            raise Exception(err)

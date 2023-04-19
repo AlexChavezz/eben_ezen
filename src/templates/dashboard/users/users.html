@@ -1,0 +1,43 @@
+{% extends './dashboard/dashboard.html' %}
+{% block title %}Users{% endblock %}
+
+{% block customCSS2 %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/workspace.css')}}" />
+{% endblock %}
+
+{% block workspace %}
+<header class="workspace-header">
+    <h1 class="workspace-title">Users Managment</h1>
+</header>
+<section class="workspace-greeting-container">
+    <h4>Hola {{current_user.username}}</h4>
+</section>
+<article class="workspace-table-container">
+
+    <table class="workspace-table">
+        <thead>
+            <tr class="workspace-table-thead">
+                <th>Id</th>
+                <th>User name</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for user in users %}
+            <tr>
+                <!-- Here we retrived passwords too -->
+                <td>{{user[0]}}</td>
+                <td>{{user[1]}}</td>
+                <td>{{user[4]}}</td>
+                <td>
+                    <a href="">edit</a>
+                    <a href="">delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+</article>
+{% endblock %}

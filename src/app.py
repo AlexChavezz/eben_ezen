@@ -2,6 +2,7 @@ from flask import Flask, render_template, redirect, request, jsonify, flash
 from config import config   
 from entities import User
 from models.ModelUser import ModelUser
+from models.ModelProduct import ModelProduct
 import mysql.connector
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_wtf.csrf import CSRFProtect
@@ -64,10 +65,35 @@ def salespoint():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    print(current_user.role)
-    if current_user.role != 'admin':
+    if isNotAdmin():
         return redirect('/salespoint')
-    return render_template('/dashboard/dashboard.html')
+    return redirect('/dashboard/users')
+
+@app.route('/dashboard/users')
+def users():
+    if isNotAdmin():
+        return redirect('/salespoint')
+    #Retrive all products from database
+    users = ModelUser.get_all(connection)
+    return render_template('/dashboard/users/users.html', users=users)
+
+@app.route('/dashboard/products')
+def products():
+    if isNotAdmin():
+        return redirect('/salespoint')
+    return render_template('/dashboard/products/products.html')
+
+
+def isNotAdmin():
+    if current_user.role != 'admin':
+        return True
+    return False
+
+"""
+    @ROUTES for imlpement CRUD operations
+"""
+
+
 
 if __name__ == '__main__':
     app.config.from_object(config['development'])

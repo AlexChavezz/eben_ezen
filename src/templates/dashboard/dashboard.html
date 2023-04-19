@@ -1,6 +1,35 @@
-<h1>You are in home, {{ current_user.username }}</h1>
+{% extends './index.html' %}
+{% block title %}Dashboard{% endblock %}
 
-<a class="btn btn-secondary" href="{{url_for('logout')}}">
-    Logout
+{% block customCSS %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/dashboard.css')}}"/>
+{% endblock %}
+{% block body %}
 
-</a>
+<main class="dashboard-page-container">
+    <aside class="dashboard-page-menu">
+        <header class="barnav-header">
+            <img 
+            src="{{url_for('static', filename='images/Lucy_Axolotl_JE2.webp')}}" 
+            alt="user"
+            class="logo-image"
+            >
+            <span class="barnav-header-bussines-name">Eben-Ezer</span>
+                <!-- <span class="barnav-header-text">{{current_user.username}}</span> -->
+        </header>
+        <ul class="barnav-header-list">
+            <li class="barnav-header-list-item"><a class="barnav-header-list-link" href="/dashboard/users">USERS</a></li>
+            <li class="barnav-header-list-item"><a class="barnav-header-list-link" href="/dashboard/products">PRODUCTS</a></li>
+        </ul>
+     
+        <div class="separator-line">
+                <a class="barnav-header-logout-button" href="{{url_for('logout')}}">LOGOUT</a>
+        </div>  
+    </aside>
+    <section class="workspace-dashboard">
+        {% block workspace %}
+        {% endblock %}
+    </section>
+</main>
+
+{% endblock %}
