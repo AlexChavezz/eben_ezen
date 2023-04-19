@@ -11,8 +11,6 @@ app = Flask(__name__)
 
 csrf = CSRFProtect()
 
-
-
 connection = mysql.connector.connect(
     host=os.environ['HOST'],
     user=os.environ['USER'],
@@ -31,24 +29,22 @@ def index():
 
 @app.route('/login', methods=['POST', 'GET'])
 def login():
+    if(current_user.is_authenticated):
+        return redirect('/dashboard')
     if request.method == 'GET':
         return render_template('auth/login.html')
     else:
         try:
-            
-            user = User(None, request.form['username'], None, request.form['password'])
+            user = User(None, request.form['username'], None, request.form['password'], None)
             logged_user = ModelUser.login(connection, user)
-            print(logged_user)
             if logged_user == None:
                 flash('Invalid credentials')
                 return redirect('/login')
-            else:
-                if logged_user.password:
-                    login_user(logged_user)
-                    return redirect('/home')
-                else:
-                    flash('Invalid credentials')
-                    return redirect('/login')
+            login_user(logged_user)
+            if current_user.role == 'admin':
+                return redirect('/dashboard')
+            if current_user.role == 'employed':
+                return redirect('/salespoint')
         except Exception as e:
             print(e)
             return jsonify({'ok': False, 'error': str(e)})  
@@ -58,10 +54,20 @@ def logout():
     logout_user()
     return redirect('/login')
 
-@app.route('/home')
+@app.route('/salespoint')
 @login_required
-def home():
-    return render_template('/home/home.html')
+def salespoint():
+    if(current_user.role != 'employed'):
+        return redirect('/dashboard')
+    return render_template('/salespoint/index.html')
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    print(current_user.role)
+    if current_user.role != 'admin':
+        return redirect('/salespoint')
+    return render_template('/dashboard/dashboard.html')
 
 if __name__ == '__main__':
     app.config.from_object(config['development'])
