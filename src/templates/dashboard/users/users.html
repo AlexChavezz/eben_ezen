@@ -7,13 +7,70 @@
 
 {% block workspace %}
 <header class="workspace-header">
+    <img class='workspace-header-menuIcon'
+        src="{{url_for('static', filename='images/menu_FILL0_wght400_GRAD0_opsz48.svg')}}" alt="menu" id="menu-icon" />
     <h1 class="workspace-title">Users Managment</h1>
 </header>
 <section class="workspace-greeting-container">
     <h4>Hola {{current_user.username}}</h4>
 </section>
+<section class="workspace-add-item-button">
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">
+        Nuevo Usuario
+    </button>
+</section>
+<!-- modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Nuevo Usuario</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- <form>
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Nombre de usuario:</label>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label">Role:</label>
+            <textarea class="form-control" id="message-text"></textarea>
+          </div>
+        </form> -->
+                <form action="/dashboard/users" method="post">
+                    <!-- <h1 class="h3 mb-3 fw-normal">Nuevo Usuario</h1> -->
+                    <!-- <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/> -->
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingInput" name="username" autocomplete="off"
+                            placeholder="Nombre de usuario" />
+                        <label for="floatingInput">Nombre de usuario</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="floatingPassword" name='password' autocomplete="off"
+                            placeholder="Contraseña" />
+                        <label for="floatingPassword">Contraseña</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="floatingConfirmPassword" name='passwordconfirm' autocomplete="off"
+                            placeholder="Confirma contraseña" />
+                        <label for="floatingConfirmPassword">Confirma contraseña</label>
+                    </div>
+                    <label for="role-select"></label>
+                    <select name="role-select" class="form-select mb-3" id="floatingRole" aria-label="Default select example">
+                        <option value="1">Administrador</option>
+                        <option value="2" selected>Empleado</option>
+                    </select>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary register">Registrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 <article class="workspace-table-container">
-
     <table class="workspace-table">
         <thead>
             <tr class="workspace-table-thead">
@@ -31,8 +88,17 @@
                 <td>{{user[1]}}</td>
                 <td>{{user[4]}}</td>
                 <td>
-                    <a href="">edit</a>
-                    <a href="">delete</a>
+                    <!-- link to remove a user -->
+                    <div style="display: flex; align-items:center; justify-content: center;">
+                        <a class='workspace-table-tItem danger' href="/api/v1/users/delete/{{user[0]}}">
+                            <img src="{{url_for('static', filename='images/delete_FILL0_wght400_GRAD0_opsz48.svg')}}"
+                                alt="delete" />
+                        </a>
+                        <a href="" class="workspace-table-tItem info">
+                            <img src="{{url_for('static', filename='images/edit_FILL0_wght400_GRAD0_opsz48.svg')}}"
+                                alt="edit" />
+                        </a>
+                    </div>
                 </td>
             </tr>
             {% endfor %}

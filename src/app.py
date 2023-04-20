@@ -10,7 +10,7 @@ import os
 
 app = Flask(__name__)
 
-csrf = CSRFProtect()
+# csrf = CSRFProtect()
 
 connection = mysql.connector.connect(
     host=os.environ['HOST'],
@@ -69,15 +69,26 @@ def dashboard():
         return redirect('/salespoint')
     return redirect('/dashboard/users')
 
-@app.route('/dashboard/users')
+@app.route('/dashboard/users', methods=['POST', 'GET'])
+@login_required
 def users():
     if isNotAdmin():
         return redirect('/salespoint')
     #Retrive all products from database
+    if request.method == 'POST':
+        try:
+            print(request.form)
+            user = User(None, request.form['username'], request.form['email'], request.form['password'], request.form['role'])
+            ModelUser.insert_one(connection, user)
+            return redirect('/dashboard/users')
+        except Exception as e:
+            print(e)
+            return jsonify({'ok': False, 'error': str(e)})
     users = ModelUser.get_all(connection)
     return render_template('/dashboard/users/users.html', users=users)
 
 @app.route('/dashboard/products')
+# @login_required
 def products():
     if isNotAdmin():
         return redirect('/salespoint')
@@ -93,9 +104,30 @@ def isNotAdmin():
     @ROUTES for imlpement CRUD operations
 """
 
+# @app.route('/api/v1/:users', methods=['POST'])
+
+# @app.route('/api/v1/users/register', methods=['POST'])
+# @login_required
+# def register():
+#     try:
+#         print(request.form)
+#         # user = User(None, request.form['username'], request.form['email'], request.form['password'], request.form['role'])
+#         # ModelUser.insert_one(connection, user)
+#         return redirect('/dashboard')
+#     except Exception as e:
+#         print(e)
+#         return jsonify({'ok': False, 'error': str(e)})
+    
+@app.route('/api/v1/users/delete/<int:id>')
+@login_required
+def delete_user(id):
+    if isNotAdmin():
+        return redirect('/salespoint')
+    ModelUser.delete_one(connection, id)
+    return redirect('/dashboard/users')
 
 
 if __name__ == '__main__':
     app.config.from_object(config['development'])
-    csrf.init_app(app)
+    # csrf.init_app(app)
     app.run() 

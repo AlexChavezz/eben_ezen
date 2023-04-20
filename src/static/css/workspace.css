@@ -59,3 +59,30 @@
 td, th {
     padding: 10px;
 }
+.workspace-table-tItem {
+    transition: all .2s ease-in-out;
+    height: 30px;
+    width: 50px;
+    display:block;
+    border-radius: 3px;
+    margin: 0px 5px;
+}
+.workspace-table-tItem:active {
+    transform: scale(.7)
+}
+.danger {
+    background: rgb(220, 53, 69);
+}
+.info {
+    background: #58FAF4;
+}
+
+.workspace-header-menuIcon {
+    margin-left: 30px;
+    cursor: pointer;
+}
+
+.workspace-add-item-button {
+    margin: 50px 0px 50px 50px;
+    display: flex;
+}

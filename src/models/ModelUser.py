@@ -42,3 +42,34 @@ class ModelUser():
             return res
         except Exception as err:
             raise Exception(err)
+    @classmethod
+    def insert_one(self, connection, user):
+        try:
+            cursor = connection.cursor()
+            sql = f"INSERT INTO users (name, id_role, password) VALUES ('{user.username}', {user.role}, '{user.password}');"
+            cursor.execute(sql)
+            connection.commit()
+            cursor.close()
+        except Exception as err:
+            raise Exception(err)
+    @classmethod
+    def delete_one(self, connection, id):
+        try:
+            cursor = connection.cursor()
+            sql = f"DELETE FROM users WHERE user_id={id};"
+            cursor.execute(sql)
+            connection.commit()
+            cursor.close()
+        except Exception as err:
+            raise Exception(err)
+        
+    @classmethod
+    def update_one(self, connection, user):
+        try:
+            cursor = connection.cursor()
+            sql = f"UPDATE users SET name='{user.username}', id_role={user.role}, password='{user.password}' WHERE user_id={user.id};"
+            cursor.execute(sql)
+            connection.commit()
+            cursor.close()
+        except Exception as err:
+            raise Exception(err)
