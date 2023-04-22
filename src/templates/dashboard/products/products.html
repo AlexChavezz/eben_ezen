@@ -1,2 +1,97 @@
-{% extends './dashboard/dashboard.html' %}
+{% extends './dashboard/users/users.html' %}
+{% block workspace_name %}Products Managment {% endblock %}
+{% block addCustomThing %}Nuevo Producto {% endblock %}
+
+{% block modal %}
+<!-- modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Nuevo Producto</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form action="/dashboard/products" method="post">
+                    <!-- <h1 class="h3 mb-3 fw-normal">Nuevo Usuario</h1> -->
+                    <br />
+                    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="nombre-product" name="name" autocomplete="off"
+                            placeholder="Nombre de usuario" required />
+                        <label for="nombre-producto">Nombre</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="floatingPassword" name='marca'
+                            autocomplete="off" placeholder="Marca" required />
+                        <label for="floatingPassword">Marca</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="floatingConfirmPassword" name='price' autocomplete="off"
+                            placeholder="Precio" required />
+                        <label for="floatingConfirmPassword">Precio</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="number" class="form-control" id="floatingConfirmPassword" name='stock' autocomplete="off"
+                            placeholder="Precio" required />
+                        <label for="floatingConfirmPassword">Stock</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <textarea type="number" class="form-control" style="height: 150px" id="floatingConfirmPassword" name='description' autocomplete="off"
+                            placeholder="Descripcion" required ></textarea>
+                        <label for="floatingConfirmPassword">Descripcion</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-primary register">Registrar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block workspace_main_table %}
+
+<article class="workspace-table-container">
+    <table class="workspace-table">
+        <thead>
+            <tr class="workspace-table-thead">
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Marca</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Descripcion del producto</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr data-product="{{product}}">
+                <!-- Here we retrived passwords too -->
+                <td>{{product[0]}}</td>
+                <td>{{product[1]}}</td>
+                <td class="password-container-item">{{product[2]}}</td>
+                <td class="password-container-item">{{product[3]}}</td>
+                <td>{{product[4]}}</td>
+                <td>{{product[5]}}</td>
+                <td>
+                    <div style="display: flex; align-items:center; justify-content: center;">
+                        <buton class="workspace-table-tItem info" data-bs-toggle="modal" data-bs-target="#exampleModal"
+                            data-bs-whatever="@mdo" data-mode="edit">
+                            <img src="{{url_for('static', filename='images/edit_FILL0_wght400_GRAD0_opsz48.svg')}}"
+                                alt="edit" />
+                            </button>
+                    </div>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</article>
+
+{% endblock %}
+
 {% block title %}Products{% endblock %}

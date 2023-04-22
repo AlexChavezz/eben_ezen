@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, request, jsonify, flash
 from config import config   
-from entities import User
+from entities import User, DefUser, Product
 from models.ModelUser import ModelUser
 from models.ModelProduct import ModelProduct
 import mysql.connector
@@ -11,7 +11,6 @@ import os
 app = Flask(__name__)
 
 csrf = CSRFProtect()
-
 connection = mysql.connector.connect(
     host=os.environ['HOST'],
     user=os.environ['USER'],
@@ -81,7 +80,10 @@ def users():
     else:
         try:
             print(request.form)
-            user = User(None, request.form['username'], request.form['role'], request.form['password'], None)
+            # if request.form['password'] != request.form['confirm_password']:
+            #     flash('Passwords do not match')
+            #     return 
+            user = DefUser(None, request.form['username'], request.form['role'], request.form['password'])
             ModelUser.insert_one(connection, user)
             return redirect('/dashboard/users')
         except Exception as e:
@@ -89,45 +91,31 @@ def users():
             return jsonify({'ok': False, 'error': str(e)})
     
 
-@app.route('/dashboard/products')
+@app.route('/dashboard/products', methods=['POST', 'GET'])
 # @login_required
 def products():
     if isNotAdmin():
         return redirect('/salespoint')
-    return render_template('/dashboard/products/products.html')
-
+    if request.method == 'GET':
+        products = ModelProduct.get_all(connection)
+        return render_template('/dashboard/products/products.html', products=products)
+    if request.method == 'POST':
+        # save product
+        try:
+            print(request.form)
+            product = Product(None, request.form['name'], request.form['marca'], request.form['price'], request.form['stock'], request.form['description'])
+            ModelProduct.save(connection, product)
+            return redirect('/dashboard/products')
+        except Exception as err:
+            print(err)
+            return jsonify({'ok': False, 'error':str(err)})
+    
 
 def isNotAdmin():
     if current_user.role != 'admin':
         return True
     return False
-
-"""
-    @ROUTES for imlpement CRUD operations
-"""
-
-# @app.route('/api/v1/:users', methods=['POST'])
-
-# @app.route('/api/v1/users/register', methods=['POST'])
-# @login_required
-# def register():
-#     try:
-#         print(request.form)
-#         # user = User(None, request.form['username'], request.form['email'], request.form['password'], request.form['role'])
-#         # ModelUser.insert_one(connection, user)
-#         return redirect('/dashboard')
-#     except Exception as e:
-#         print(e)
-#         return jsonify({'ok': False, 'error': str(e)})
     
-@app.route('/api/v1/users/delete/<int:id>')
-@login_required
-def delete_user(id):
-    if isNotAdmin():
-        return redirect('/salespoint')
-    ModelUser.delete_one(connection, id)
-    return redirect('/dashboard/users')
-
 
 if __name__ == '__main__':
     app.config.from_object(config['development'])

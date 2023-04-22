@@ -61,3 +61,13 @@ if (exampleModal) {
 //     console.log('print something')
 //     console.log (getFieldsValues())
 // })
+
+
+// TOOGLE FIELD PASSWORD
+
+document.body.addEventListener('click', function (e) {
+    if (!e.target.classList.contains('eye-toggle-icon')) return;
+    const inputPassword = e.target.previousElementSibling.children[0];
+    if (inputPassword.type === 'password') inputPassword.type = 'text';
+    else inputPassword.type = 'password';
+})

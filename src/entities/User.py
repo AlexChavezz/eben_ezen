@@ -11,3 +11,5 @@ class User(UserMixin):
     @classmethod
     def check_password(self, hased_password, password):
         return check_password_hash(hased_password, password)
+    
+

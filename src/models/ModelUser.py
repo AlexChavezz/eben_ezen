@@ -46,7 +46,7 @@ class ModelUser():
     def insert_one(self, connection, user):
         try:
             cursor = connection.cursor()
-            sql = f"INSERT INTO users (name, id_role, password) VALUES ('{user.username}', {user.role}, '{user.password}');"
+            sql = f"INSERT INTO users (name, id_role, password) VALUES ('{user.username}', {user.id_role}, '{user.password}');"
             cursor.execute(sql)
             connection.commit()
             cursor.close()

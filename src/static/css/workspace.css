@@ -86,3 +86,14 @@ td, th {
     margin: 50px 0px 50px 50px;
     display: flex;
 }
+.password-container-item {
+    position: relative;
+}
+.eye-toggle-icon {
+    position: absolute;
+    right: 20px;
+    top: 0px;
+    bottom: 0px;
+    margin: auto;
+    cursor: pointer;
+}

@@ -9,16 +9,17 @@
 <header class="workspace-header">
     <img class='workspace-header-menuIcon'
         src="{{url_for('static', filename='images/menu_FILL0_wght400_GRAD0_opsz48.svg')}}" alt="menu" id="menu-icon" />
-    <h1 class="workspace-title">Users Managment</h1>
+    <h1 class="workspace-title">{% block workspace_name %}Users Managment {% endblock %}</h1>
 </header>
 <section class="workspace-greeting-container">
     <h4>Hola {{current_user.username}}</h4>
 </section>
 <section class="workspace-add-item-button">
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">
-        Nuevo Usuario
+        {% block addCustomThing %}Nuevo Usuario {% endblock %}
     </button>
 </section>
+{% block modal %}
 <!-- modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -28,40 +29,31 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <!-- <form>
-          <div class="mb-3">
-            <label for="recipient-name" class="col-form-label">Nombre de usuario:</label>
-            <input type="text" class="form-control" id="recipient-name">
-          </div>
-          <div class="mb-3">
-            <label for="message-text" class="col-form-label">Role:</label>
-            <textarea class="form-control" id="message-text"></textarea>
-          </div>
-        </form> -->
                 <form action="/dashboard/users" method="post">
-                    <h1 class="h3 mb-3 fw-normal">Nuevo Usuario</h1>
+                    <!-- <h1 class="h3 mb-3 fw-normal">Nuevo Usuario</h1> -->
+                    <br />
                     <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
                     <div class="form-floating mb-3">
                         <input type="text" class="form-control" id="floatingInput" name="username" autocomplete="off"
-                            placeholder="Nombre de usuario" />
+                            placeholder="Nombre de usuario" required />
                         <label for="floatingInput">Nombre de usuario</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="password" class="form-control" id="floatingPassword" name='password'
-                            autocomplete="off" placeholder="Contraseña" />
+                            autocomplete="off" placeholder="Contraseña" required />
                         <label for="floatingPassword">Contraseña</label>
                     </div>
                     <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="floatingConfirmPassword" name='passwordconfirm'
-                            autocomplete="off" placeholder="Confirma contraseña" />
+                        <input type="password" class="form-control" id="floatingConfirmPassword" name='confirm_password' autocomplete="off"
+                            placeholder="Confirma contraseña" required />
                         <label for="floatingConfirmPassword">Confirma contraseña</label>
                     </div>
                     <label for="role"></label>
-                    <select name="role" class="form-select mb-3" id="floatingRole"
-                        aria-label="Default select example">
+                    <select name="role" class="form-select mb-3" id="floatingRole" aria-label="Default select example">
                         <option value="1">Administrador</option>
                         <option value="2" selected>Empleado</option>
                     </select>
+
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="submit" class="btn btn-primary register">Registrar</button>
@@ -71,12 +63,15 @@
         </div>
     </div>
 </div>
+{% endblock %}
+{% block workspace_main_table %}
 <article class="workspace-table-container">
     <table class="workspace-table">
         <thead>
             <tr class="workspace-table-thead">
                 <th>Id</th>
                 <th>User name</th>
+                <th>Password</th>
                 <th>Role</th>
                 <th>Actions</th>
             </tr>
@@ -87,6 +82,13 @@
                 <!-- Here we retrived passwords too -->
                 <td>{{user[0]}}</td>
                 <td>{{user[1]}}</td>
+                <td class="password-container-item">
+                    <form>
+                        <input type="password" class='form-control password-displayer' value="{{user[3]}}" disabled />
+                    </form>
+                    <img src="{{url_for('static', filename='images/visibility_FILL0_wght400_GRAD0_opsz48.svg')}}"
+                        class="eye-toggle-icon" />
+                </td>
                 <td>{{user[4]}}</td>
                 <td>
                     <!-- link to remove a user -->
@@ -95,16 +97,17 @@
                             <img src="{{url_for('static', filename='images/delete_FILL0_wght400_GRAD0_opsz48.svg')}}"
                                 alt="delete" />
                         </a>
-                        <a href="" class="workspace-table-tItem info">
+                        <buton class="workspace-table-tItem info" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo"
+                            data-mode="edit">
                             <img src="{{url_for('static', filename='images/edit_FILL0_wght400_GRAD0_opsz48.svg')}}"
                                 alt="edit" />
-                        </a>
+                        </button>
                     </div>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-
 </article>
+{% endblock %}
 {% endblock %}
