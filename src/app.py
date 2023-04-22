@@ -10,7 +10,7 @@ import os
 
 app = Flask(__name__)
 
-# csrf = CSRFProtect()
+csrf = CSRFProtect()
 
 connection = mysql.connector.connect(
     host=os.environ['HOST'],
@@ -75,17 +75,19 @@ def users():
     if isNotAdmin():
         return redirect('/salespoint')
     #Retrive all products from database
-    if request.method == 'POST':
+    if request.method == 'GET':
+        users = ModelUser.get_all(connection)
+        return render_template('/dashboard/users/users.html', users=users)
+    else:
         try:
             print(request.form)
-            user = User(None, request.form['username'], request.form['email'], request.form['password'], request.form['role'])
+            user = User(None, request.form['username'], request.form['role'], request.form['password'], None)
             ModelUser.insert_one(connection, user)
             return redirect('/dashboard/users')
         except Exception as e:
             print(e)
             return jsonify({'ok': False, 'error': str(e)})
-    users = ModelUser.get_all(connection)
-    return render_template('/dashboard/users/users.html', users=users)
+    
 
 @app.route('/dashboard/products')
 # @login_required
@@ -129,5 +131,5 @@ def delete_user(id):
 
 if __name__ == '__main__':
     app.config.from_object(config['development'])
-    # csrf.init_app(app)
+    csrf.init_app(app)
     app.run() 
