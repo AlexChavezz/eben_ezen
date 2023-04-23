@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, request, jsonify, flash
-from config import config   
+from config import config
 from entities import User, DefUser, Product
 from models.ModelUser import ModelUser
 from models.ModelProduct import ModelProduct
@@ -11,32 +11,31 @@ import os
 app = Flask(__name__)
 
 csrf = CSRFProtect()
-connection = mysql.connector.connect(
-    host=os.environ['HOST'],
-    user=os.environ['USER'],
-    password=os.environ['PASSWORD'],
-    database=os.environ['DATABASE']
-)
 
 login_manager_app = LoginManager(app)
+
+
 @login_manager_app.user_loader
 def load_user(id):
-    return ModelUser.get_by_id(connection, id)
+    return ModelUser.get_by_id(id)
+
 
 @app.route('/')
 def index():
     return redirect('/login')
 
+
 @app.route('/login', methods=['POST', 'GET'])
 def login():
-    if(current_user.is_authenticated):
+    if (current_user.is_authenticated):
         return redirect('/dashboard')
     if request.method == 'GET':
         return render_template('auth/login.html')
     else:
         try:
-            user = User(None, request.form['username'], None, request.form['password'], None)
-            logged_user = ModelUser.login(connection, user)
+            user = User(None, request.form['username'],
+                        None, request.form['password'], None)
+            logged_user = ModelUser.login(user)
             if logged_user == None:
                 flash('Invalid credentials')
                 return redirect('/login')
@@ -47,19 +46,22 @@ def login():
                 return redirect('/salespoint')
         except Exception as e:
             print(e)
-            return jsonify({'ok': False, 'error': str(e)})  
+            return jsonify({'ok': False, 'error': str(e)})
+
 
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect('/login')
 
+
 @app.route('/salespoint')
 @login_required
 def salespoint():
-    if(current_user.role != 'employed'):
+    if (current_user.role != 'employed'):
         return redirect('/dashboard')
     return render_template('/salespoint/index.html')
+
 
 @app.route('/dashboard')
 @login_required
@@ -68,56 +70,124 @@ def dashboard():
         return redirect('/salespoint')
     return redirect('/dashboard/users')
 
+
 @app.route('/dashboard/users', methods=['POST', 'GET'])
 @login_required
 def users():
     if isNotAdmin():
         return redirect('/salespoint')
-    #Retrive all products from database
+    # Retrive all products from database
     if request.method == 'GET':
-        users = ModelUser.get_all(connection)
+        users = ModelUser.get_all()
         return render_template('/dashboard/users/users.html', users=users)
     else:
         try:
-            print(request.form)
-            # if request.form['password'] != request.form['confirm_password']:
-            #     flash('Passwords do not match')
-            #     return 
-            user = DefUser(None, request.form['username'], request.form['role'], request.form['password'])
-            ModelUser.insert_one(connection, user)
+            user = DefUser(
+                None, request.form['username'], request.form['role'], request.form['password'])
+            ModelUser.insert_one(user)
             return redirect('/dashboard/users')
         except Exception as e:
             print(e)
             return jsonify({'ok': False, 'error': str(e)})
-    
+
 
 @app.route('/dashboard/products', methods=['POST', 'GET'])
-# @login_required
+@login_required
 def products():
     if isNotAdmin():
         return redirect('/salespoint')
     if request.method == 'GET':
-        products = ModelProduct.get_all(connection)
+        products = ModelProduct.get_all()
         return render_template('/dashboard/products/products.html', products=products)
-    if request.method == 'POST':
+    elif request.method == 'POST':
         # save product
         try:
             print(request.form)
-            product = Product(None, request.form['name'], request.form['marca'], request.form['price'], request.form['stock'], request.form['description'])
-            ModelProduct.save(connection, product)
+            product = Product(None, request.form['name'], request.form['marca'],
+                              request.form['price'], request.form['stock'], request.form['description'])
+            ModelProduct.save(product)
             return redirect('/dashboard/products')
         except Exception as err:
             print(err)
-            return jsonify({'ok': False, 'error':str(err)})
-    
+            return jsonify({'ok': False, 'error': str(err)})
+
+@app.route('/dashboard/products/update/<id>', methods=['GET', 'POST'])
+@login_required
+def update_products(id):
+    if request.method == 'POST':
+        product = Product(id, request.form['name'], request.form['marca'],
+        request.form['price'], request.form['stock'], request.form['description'])
+        ModelProduct.update_one(product)
+        return redirect('/dashboard/products')
+    if request.method == 'GET':
+        product = ModelProduct.get_by_id(id)
+        return render_template('/dashboard/products/editform.html', product=product)
+
+
+# @app.route('/dashboard/products/setupdate/<id>', methods=['POST'])
+# @login_required
+# def setupdate(id):
+#     product = Product(id, request.form['name'], request.form['marca'],
+#                       request.form['price'], request.form['stock'], request.form['description'])
+#     ModelProduct.update_one(product)
+#     return redirect('/dashboard/products')
+
+
+@app.route('/dashboard/products/create', methods=['POST', 'GET'])
+@login_required
+def create_products():
+    if request.method == 'GET':
+        return render_template('/dashboard/products/newProductForm.html')
+    elif request.method == 'POST':
+        try:
+            product = Product(None, request.form['name'], request.form['marca'],
+                              request.form['price'], request.form['stock'], request.form['description'])
+            ModelProduct.save(product)
+            return redirect('/dashboard/products')
+        except Exception as e:
+            print(e)
+            return jsonify({'ok': False, 'error': str(e)})
+
+
+@app.route('/dashboard/users/create', methods=['GET', 'POST'])
+@login_required
+def create_users():
+    if request.method == 'POST':
+        try:
+            user = DefUser(None, request.form['username'], request.form['role'], request.form['password'])
+            ModelUser.insert_one(user)
+            return redirect('/dashboard/users')
+        except Exception as e:
+            print(e)
+            return jsonify({'ok': False, 'error': str(e)})
+    elif request.method == 'GET':
+        return render_template('/dashboard/users/newUserForm.html')
+
+@app.route('/dashboard/users/update/<id>', methods=['GET', 'POST'])
+@login_required
+def update_users(id):
+    if request.method == 'POST':
+        print(request.form)
+        user = DefUser(id, request.form['username'], request.form['id_role'], request.form['password'])
+        ModelUser.update_one(user)
+        return redirect('/dashboard/users')
+    if request.method == 'GET':
+        user = ModelUser.get_by_id(id)
+        return render_template('/dashboard/users/editUserForm.html', user=user)
+
+@app.route('/dashboard/users/deleteone/<id>', methods=['GET'])
+@login_required
+def delete_user(id):
+    ModelUser.delete_one(id)
+    return redirect('/dashboard/users')
 
 def isNotAdmin():
     if current_user.role != 'admin':
         return True
     return False
-    
+
 
 if __name__ == '__main__':
     app.config.from_object(config['development'])
     csrf.init_app(app)
-    app.run() 
+    app.run()

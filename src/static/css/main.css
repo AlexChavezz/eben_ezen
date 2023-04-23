@@ -2,3 +2,11 @@
     text-decoration: none;
     list-style: none;
 }
+a {
+    color: white;
+    text-decoration: none;
+}
+
+.btn {
+    margin: 0px 10px;
+}
