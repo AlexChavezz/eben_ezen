@@ -6,7 +6,7 @@
 <header class="workspace-header">
     <img class='workspace-header-menuIcon'
         src="{{url_for('static', filename='images/menu_FILL0_wght400_GRAD0_opsz48.svg')}}" alt="menu" id="menu-icon" />
-    <h1 class="workspace-title">{% block workspace_name %}Edit {{product.name}}{% endblock %}</h1>
+    <h1 class="workspace-title">{% block workspace_name %}Editar {{product.name}}{% endblock %}</h1>
 </header>
 <div class="col-sm-6 col-md-6 col-lg-6 mx-auto">
     <form action="/dashboard/products/update/{{product.product_id}}" method="post" id="products-form">

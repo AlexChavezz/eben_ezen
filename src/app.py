@@ -3,15 +3,11 @@ from config import config
 from entities import User, DefUser, Product
 from models.ModelUser import ModelUser
 from models.ModelProduct import ModelProduct
-import mysql.connector
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_wtf.csrf import CSRFProtect
-import os
 
 app = Flask(__name__)
-
 csrf = CSRFProtect()
-
 login_manager_app = LoginManager(app)
 
 
@@ -62,6 +58,10 @@ def salespoint():
         return redirect('/dashboard')
     return render_template('/salespoint/index.html')
 
+@app.route('/products/get_products')
+def get_products():
+    products = ModelProduct.get_all()
+    return jsonify({'ok': True, 'products': products})
 
 @app.route('/dashboard')
 @login_required
@@ -114,6 +114,8 @@ def products():
 @app.route('/dashboard/products/update/<id>', methods=['GET', 'POST'])
 @login_required
 def update_products(id):
+    if isNotAdmin():
+        return redirect('/salespoint')
     if request.method == 'POST':
         product = Product(id, request.form['name'], request.form['marca'],
         request.form['price'], request.form['stock'], request.form['description'])
@@ -124,18 +126,11 @@ def update_products(id):
         return render_template('/dashboard/products/editform.html', product=product)
 
 
-# @app.route('/dashboard/products/setupdate/<id>', methods=['POST'])
-# @login_required
-# def setupdate(id):
-#     product = Product(id, request.form['name'], request.form['marca'],
-#                       request.form['price'], request.form['stock'], request.form['description'])
-#     ModelProduct.update_one(product)
-#     return redirect('/dashboard/products')
-
-
 @app.route('/dashboard/products/create', methods=['POST', 'GET'])
 @login_required
 def create_products():
+    if isNotAdmin():
+        return redirect('/salespoint')
     if request.method == 'GET':
         return render_template('/dashboard/products/newProductForm.html')
     elif request.method == 'POST':
@@ -152,6 +147,8 @@ def create_products():
 @app.route('/dashboard/users/create', methods=['GET', 'POST'])
 @login_required
 def create_users():
+    if isNotAdmin():
+        return redirect('/salespoint')
     if request.method == 'POST':
         try:
             user = DefUser(None, request.form['username'], request.form['role'], request.form['password'])
@@ -166,6 +163,8 @@ def create_users():
 @app.route('/dashboard/users/update/<id>', methods=['GET', 'POST'])
 @login_required
 def update_users(id):
+    if isNotAdmin():
+        return redirect('/salespoint')
     if request.method == 'POST':
         print(request.form)
         user = DefUser(id, request.form['username'], request.form['id_role'], request.form['password'])
@@ -178,6 +177,8 @@ def update_users(id):
 @app.route('/dashboard/users/deleteone/<id>', methods=['GET'])
 @login_required
 def delete_user(id):
+    if isNotAdmin():
+        return redirect('/salespoint')
     ModelUser.delete_one(id)
     return redirect('/dashboard/users')
 

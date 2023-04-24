@@ -1,0 +1,141 @@
+
+
+.main-content {
+    background-color: rgba(245, 247,251,1);
+    display: flex;
+    height: calc(100vh - 55px);
+    width: 100vw;
+}
+
+.salespoint-header-container {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    height: 55px;
+    border-bottom: 1px solid #ccc;
+}
+
+.salespoint-header-title {
+    color: #404040;
+    font-size: 1.6rem;
+    text-align: left;
+    margin-left: 30px;
+}
+
+.salespoint-main-content-searchside-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 400px;
+    border-bottom: 1px solid #ccc;
+    padding: 40px;
+}
+
+.salespoint-main-content-searchbar {
+    width: 100%;
+    height: 50px;
+    border: none;
+    outline: none;
+    font-size: 1.1rem;
+    padding: 20px;
+    padding: 20px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    background-color: #fffeff;
+}
+
+.salespoint-main-content-searchbar-icon {
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    margin: auto;
+    right: 20px;    
+}
+
+.salespoint-main-content-searchbar:focus {
+    background-color: #fffeffb2;
+}
+
+.salespoint-main-content-results-container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 30px);
+    width: 100%;
+    padding: 40px;
+    background-color: #fffe;
+    margin-top: 30px;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+    border-radius: 5px;
+}
+
+.main-content-sales-view-container {
+    height: 100%;
+    width: calc(100vw - 400px);
+    padding: 40px;
+}
+
+.main-content-sales-view-products-container {
+    display: flex;
+    flex-direction: column;
+    height: 80%;
+    width: 100%;
+    background-color: #fffe;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+    border-radius: 5px;
+}
+
+.main-content-sales-view-buttons-container {
+    display: flex;
+    justify-content: space-between;
+    height: 15%;
+    width: 100%;
+    margin-top: 35px;
+    background-color: #fffe;
+    box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.main-content-sales-view-buttons-salebutton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    width: 25%;
+    border: none;
+    outline: none;
+    font-size: 1.1rem;
+    cursor: pointer;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+.main-content-sales-view-buttons-total-text {
+    font-size: 2rem;
+    display: flex;
+    align-items:center;
+}
+
+.main-content-sales-view-buttons-total {
+    font-size: 2rem;
+    margin-left: 10px;
+}
+
+.list-item {
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    transition: background 200ms ease-in;
+    justify-content: space-between;
+    height: 50px;
+    padding: 20px;
+    width: 100%;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.list-item:hover {
+    background-color: #f5f7fb;
+}

@@ -38,15 +38,6 @@ class ModelProduct():
             return Response('Product saved', 200)
         except Exception as e:
             raise Exception(e)
-    # @classmethod
-    # def delete_by_id(self, id):
-    #     try:
-    #         cursor = self.get_connection().cursor()
-    #         cursor.execute('DELETE FROM products WHERE product_id = %s', (id))
-    #         cursor.close()
-    #         return Response('Product deleted', 200)
-    #     except Exception as e:
-    #         raise Exception(e)
     @classmethod
     def get_by_id(self, id):
         try:
