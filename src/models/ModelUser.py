@@ -11,14 +11,14 @@ class ModelUser():
             host=os.environ['HOST'],
             user=os.environ['USER'],
             password=os.environ['PASSWORD'],
-            database=os.environ['DATABASE']
+            database=os.environ['database']
         )
     @classmethod
     def login(self, user):
         try:
             connection = self.get_connection()
             cursor = connection.cursor()
-            sql = f"SELECT user_id, name, id_role, password, role FROM users JOIN roles ON users.id_role=roles.rol_id WHERE name = '{user.username}' AND password = '{user.password}';"
+            sql = f"SELECT user_id, username, id_role, password, role FROM users JOIN roles ON users.id_role=roles.rol_id WHERE username = '{user.username}' AND password = '{user.password}';"
             cursor.execute(sql)
             res = cursor.fetchone()
             print(res)
@@ -36,7 +36,7 @@ class ModelUser():
         try:
             connection = self.get_connection()
             cursor = connection.cursor()
-            sql = f"SELECT user_id, name, id_role, password, role FROM users JOIN roles ON users.id_role=roles.rol_id WHERE user_id={id};"
+            sql = f"SELECT user_id, username, id_role, password, role FROM users JOIN roles ON users.id_role=roles.rol_id WHERE user_id={id};"
             cursor.execute(sql)
             res = cursor.fetchone()
             cursor.close()
@@ -52,7 +52,7 @@ class ModelUser():
         try:
             connection = self.get_connection()
             cursor = connection.cursor()
-            sql = f"SELECT user_id, name, id_role, password, role FROM users JOIN roles ON users.id_role=roles.rol_id;"
+            sql = f"SELECT user_id, username, id_role, password, role FROM users JOIN roles ON users.id_role=roles.rol_id;"
             cursor.execute(sql)
             res = cursor.fetchall()
             cursor.close()
@@ -65,7 +65,7 @@ class ModelUser():
         try:
             connection = self.get_connection()
             cursor = connection.cursor()
-            sql = f"INSERT INTO users (name, id_role, password) VALUES ('{user.username}', {user.id_role}, '{user.password}');"
+            sql = f"INSERT INTO users (username, id_role, password) VALUES ('{user.username}', {user.id_role}, '{user.password}');"
             cursor.execute(sql)
             connection.commit()
             cursor.close()
@@ -91,7 +91,7 @@ class ModelUser():
         try:
             connection = self.get_connection()
             cursor = connection.cursor()
-            sql = f"UPDATE users SET name='{user.username}', id_role={user.id_role}, password='{user.password}' WHERE user_id={user.id};"
+            sql = f"UPDATE users SET username='{user.username}', id_role={user.id_role}, password='{user.password}' WHERE user_id={user.id};"
             cursor.execute(sql)
             connection.commit()
             cursor.close()

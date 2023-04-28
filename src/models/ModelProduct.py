@@ -10,7 +10,7 @@ class ModelProduct():
             host=os.environ['HOST'],
             user=os.environ['USER'],
             password=os.environ['PASSWORD'],
-            database=os.environ['DATABASE']
+            database=os.environ['database']
         )
     @classmethod
     def get_all(self):

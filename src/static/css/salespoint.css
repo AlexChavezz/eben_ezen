@@ -82,6 +82,8 @@
     background-color: #fffe;
     box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px 0px;
     border-radius: 5px;
+    overflow-y: auto;
+    padding: 40px;
 }
 
 .main-content-sales-view-buttons-container {
@@ -138,4 +140,41 @@
 }
 .list-item:hover {
     background-color: #f5f7fb;
+}
+
+.main-content-sales-view-products-container-table {
+    padding: 20px;
+    font-weight: lighter;
+}
+.main-content-sales-view-products-container-table thead, th {
+    border: 1px solid #ccc;
+}
+/* .main-content-sales-view-products-container-list-item {
+    padding: 10px;
+    border-radius: 5px;
+    margin: 20px;
+} */
+th {
+    background-color: #f5f7fb;
+    font-size: 1.1rem;
+    font-weight: lighter;
+}
+
+td, th {
+    padding: 10px;
+}
+td:first-child, th:first-child {
+    width: 35%;
+}
+td:nth-child(2), th:nth-child(2) {
+    width: 25%;
+}
+td:nth-child(3), th:nth-child(3) {
+    width: 25%;
+}
+td:nth-child(4), th:nth-child(4) {
+    width: 15%;
+}
+.main-content-sales-view-products-container-table-tbody-tr {
+    padding: 30px;
 }
