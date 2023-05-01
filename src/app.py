@@ -1,8 +1,9 @@
 from flask import Flask, render_template, redirect, request, jsonify, flash
 from config import config
-from entities import User, DefUser, Product
+from entities import User, DefUser, Product, Sale
 from models.ModelUser import ModelUser
 from models.ModelProduct import ModelProduct
+from models.ModelSale import ModelSale
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 from flask_wtf.csrf import CSRFProtect
 
@@ -14,7 +15,6 @@ login_manager_app = LoginManager(app)
 @login_manager_app.user_loader
 def load_user(id):
     return ModelUser.get_by_id(id)
-
 
 @app.route('/')
 def index():
@@ -58,11 +58,25 @@ def salespoint():
         return redirect('/dashboard')
     return render_template('/salespoint/index.html')
 
+@app.route('/sales/add_sale', methods=['POST'])
+@csrf.exempt
+def post_sale():
+    try:
+        request_data = request.get_json()
+        sale_object = Sale(None, request_data['saleDate'], total_price=request_data['total'], id_user=current_user.id)
+        sale_id = ModelSale.register_sale(sale_object)
+        ModelSale.insert_into_sale_product(request_data['products'], sale_id)
+        ModelSale.update_product_stock(request_data['products'])
+        return jsonify({"status":"done!"})
+    except Exception as e:
+        print(e)
+        return jsonify({'ok': False, 'error': str(e)})
+
 @app.route('/products/get_products')
 def get_products():
     products = ModelProduct.get_all()
     return jsonify({'ok': True, 'products': products})
-
+    
 @app.route('/dashboard')
 @login_required
 def dashboard():

@@ -69,17 +69,29 @@ document.addEventListener('click', function({target}) {
 
 })
 
-document.querySelector('.main-content-sales-view-buttons-salebutton').addEventListener('click', function() {
-    console.log('click')
+document.querySelector('.main-content-sales-view-buttons-salebutton').addEventListener('click', async function() {
     const products = document.querySelectorAll('.main-content-sales-view-products-container-table-tbody-tr');
     let productsArray = [];
     products.forEach(product => {
         productsArray = [...productsArray, {
-            id: product.getAttribute('data-id'),
+            product_id: product.getAttribute('data-id'),
             name: product.children[0].textContent,
             stock: parseInt(product.children[1].textContent),
             price: parseInt(product.children[2].textContent.slice(1)),
         }]
     })
-    console.log(productsArray)
+    let currentSale = {
+        products: productsArray,
+        total: parseInt(total.textContent),
+        saleDate: dateString = new Date().toISOString().slice(0, 10)
+    }
+    let data = await window.fetch('/sales/add_sale', {
+        method: 'POST',
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(currentSale)
+    });
+        data = await data.json();
+        console.log(data);
 })
