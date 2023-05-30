@@ -38,6 +38,8 @@ document.addEventListener('click', function({target}) {
             description: productArray[5]
         }
 
+        if(currentProduct.stock < 1) return;
+
         document.querySelector('.main-content-sales-view-products-container-table-tbody').innerHTML += `
         <tr class="main-content-sales-view-products-container-table-tbody-tr" data-id=${target.getAttribute('data-id')}>
             <td class="main-content-sales-view-products-container-table-tbody-tr-td">${currentProduct.name}</td>
